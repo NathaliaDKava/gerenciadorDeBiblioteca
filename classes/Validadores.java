@@ -1,7 +1,5 @@
 package classes;
 
-import java.util.ArrayList;
-
 public abstract class Validadores {
     
 
@@ -63,10 +61,10 @@ public abstract class Validadores {
 
         return isValid;
     }
-    public static boolean validarIsbnUnico(String isbn, ArrayList<Livro> livros){
+    public static boolean validarIsbnUnico(String isbn){
         boolean isValid = true;
 
-        for(Livro livro : livros){
+        for(Livro livro : Biblioteca.getLivros()){
             if(isbn.equals(livro.getIsbn())){
                 isValid = false;
             }
@@ -83,16 +81,16 @@ public abstract class Validadores {
 
         return isValid;
     }
-    public static boolean validarEmailUnico(String email, ArrayList<Bibliotecario> bibliotecarios, ArrayList<Leitor> leitores){
+    public static boolean validarEmailUnico(String email){
         boolean isValid = true;
 
-        for(Bibliotecario bibliotecario : bibliotecarios){
+        for(Bibliotecario bibliotecario : Biblioteca.getBibliotecarios()){
             if(email.equals(bibliotecario.getEmail())){
                 isValid = false;
                 return isValid;
             }
         }
-        for(Leitor leitor : leitores){
+        for(Leitor leitor : Biblioteca.getLeitores()){
             if(email.equals(leitor.getEmail())){
                 isValid = false;
                 break;
@@ -117,16 +115,16 @@ public abstract class Validadores {
 
         return isValid;
     }
-    public static boolean validarTelefoneUnico(String telefone, ArrayList<Bibliotecario> bibliotecarios, ArrayList<Leitor> leitores){
+    public static boolean validarTelefoneUnico(String telefone){
         boolean isValid = true;
 
-        for(Bibliotecario bibliotecario : bibliotecarios){
+        for(Bibliotecario bibliotecario : Biblioteca.getBibliotecarios()){
             if(telefone.equals(bibliotecario.getTelefone())){
                 isValid = false;
                 return isValid;
             }
         }
-        for(Leitor leitor : leitores){
+        for(Leitor leitor : Biblioteca.getLeitores()){
             if(telefone.equals(leitor.getTelefone())){
                 isValid = false;
                 break;
@@ -145,16 +143,16 @@ public abstract class Validadores {
 
         return isValid;
     }
-    public static boolean validarUsuarioUnico(String usuario, ArrayList<Bibliotecario> bibliotecarios, ArrayList<Leitor> leitores){
+    public static boolean validarUsuarioUnico(String usuario){
         boolean isValid = true;
 
-        for(Bibliotecario bibliotecario : bibliotecarios){
+        for(Bibliotecario bibliotecario : Biblioteca.getBibliotecarios()){
             if(usuario.equals(bibliotecario.getUsuario())){
                 isValid = false;
                 return isValid;
             }
         }
-        for(Leitor leitor : leitores){
+        for(Leitor leitor : Biblioteca.getLeitores()){
             if(usuario.equals(leitor.getUsuario())){
                 isValid = false;
                 break;

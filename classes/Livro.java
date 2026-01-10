@@ -9,6 +9,7 @@ import excecoes.RegistroJaExistenteException;
 
 public class Livro {
     private static int contadorIds;
+    private static double valorMultaPorDia;
     private int id;
     private String titulo;
     private Autor autor;
@@ -19,17 +20,17 @@ public class Livro {
     private int quantidadeTotal;
     private int quantidadeDisponivel;
 
-    public Livro(String titulo, Autor autor, String isbn, ArrayList<Livro> livros, int anoPublicacao, int quantidade) throws FraseInvalidaException, AnoInvalidoException, RegistroJaExistenteException {
+    public Livro(String titulo, Autor autor, String isbn, int anoPublicacao, int quantidade) throws FraseInvalidaException, AnoInvalidoException, RegistroJaExistenteException {
         this.id = ++contadorIds;
         setTitulo(titulo);
         setAutor(autor);
-        setIsbn(isbn, livros);
+        setIsbn(isbn);
         setAnoPublicacao(anoPublicacao);
         quantidadeTotal += quantidade;
         quantidadeDisponivel += quantidade;
     }
-    public Livro(String titulo, Autor autor, String isbn, ArrayList<Livro> livros, String genero, String editora, int anoPublicacao, int quantidade) throws FraseInvalidaException, AnoInvalidoException, RegistroJaExistenteException {
-        this(titulo, autor, isbn, livros, anoPublicacao, quantidade);
+    public Livro(String titulo, Autor autor, String isbn, String genero, String editora, int anoPublicacao, int quantidade) throws FraseInvalidaException, AnoInvalidoException, RegistroJaExistenteException {
+        this(titulo, autor, isbn, anoPublicacao, quantidade);
         setGenero(genero);
         setEditora(editora);
     }
@@ -63,9 +64,9 @@ public class Livro {
     public Autor getAutor() {
         return autor;
     }
-    public void setIsbn(String isbn, ArrayList<Livro> livros) throws FraseInvalidaException, RegistroJaExistenteException {
+    public void setIsbn(String isbn) throws FraseInvalidaException, RegistroJaExistenteException {
         if(Validadores.validarIsbn(isbn)) {
-            if(Validadores.validarIsbnUnico(isbn, livros)){
+            if(Validadores.validarIsbnUnico(isbn)){
                 this.isbn = isbn;
             }else{
                 throw new RegistroJaExistenteException("ISBN já cadastrado. Digite um ISBN único para o livro.");

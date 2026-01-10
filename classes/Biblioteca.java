@@ -1,42 +1,48 @@
 package classes;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Scanner;
 import excecoes.FraseInvalidaException;
 import excecoes.RegistroJaExistenteException;
 
 public class Biblioteca {
-    private String nome;
-    private String endereco;
-    private ArrayList<Bibliotecario> bibliotecarios;
-    private ArrayList<Leitor> leitores;
-    private ArrayList<Livro> livros;
+    private static String nome;
+    private static String endereco;
+    private static ArrayList<Bibliotecario> bibliotecarios;
+    private static ArrayList<Leitor> leitores;
+    private static ArrayList<Livro> livros;
+    private static ArrayList<Autor> autores;
     
+    static{
+        bibliotecarios = new ArrayList<Bibliotecario>();
+        leitores = new ArrayList<Leitor>();
+        livros = new ArrayList<Livro>();
+        autores = new ArrayList<Autor>();
+    }
+
     public Biblioteca(String nome, String endereco) throws FraseInvalidaException {
         setNome(nome);
         setEndereco(endereco);
-        this.bibliotecarios = new ArrayList<Bibliotecario>();
-        this.leitores = new ArrayList<Leitor>();
-        this.livros = new ArrayList<Livro>();
     }
 
-    public void setNome(String nome) throws FraseInvalidaException {
+    public static void setNome(String nome) throws FraseInvalidaException {
         if(Validadores.validarString(nome)){
-            this.nome = nome;
+            Biblioteca.nome = nome;
         }else{
             throw new FraseInvalidaException("Nome inválido. Deve conter apenas letras e espaços.");
         }
     }
-    public String getNome(){
-        return this.nome;
+    public static String getNome(){
+        return nome;
     }
-    public void setEndereco(String endereco) {
-        this.endereco = endereco;
+    public static void setEndereco(String endereco) {
+        Biblioteca.endereco = endereco;
     }
-    public String getEndereco(){
-        return this.endereco;
+    public static String getEndereco(){
+        return endereco;
     }
-    public boolean cadastrarBibliotecario() {
+    public static void cadastrarBibliotecario() {
         Bibliotecario bibliotecario;
         Scanner scan = new Scanner(System.in);
         String nome, email, telefone, usuario, senha;
@@ -59,52 +65,63 @@ public class Biblioteca {
         senha = scan.nextLine();
 
         try{
-            bibliotecario = new Bibliotecario(nome, email, telefone, usuario, senha, bibliotecarios, leitores);
+            bibliotecario = new Bibliotecario(nome, email, telefone, usuario, senha);
             adicionarBibliotecario(bibliotecario);
         }catch(FraseInvalidaException | RegistroJaExistenteException e){
             System.out.println(e.getMessage());
         }
         scan.close();
-
-        return true;
     }
-    public void adicionarBibliotecario(Bibliotecario bibliotecario) {
+    public static void adicionarBibliotecario(Bibliotecario bibliotecario) {
         if(!bibliotecarios.contains(bibliotecario) && bibliotecario != null){
             bibliotecarios.add(bibliotecario);
         }
     }
-    public void removerBibliotecario(Bibliotecario bibliotecario) {
+    public static void removerBibliotecario(Bibliotecario bibliotecario) {
         if(bibliotecarios.contains(bibliotecario)) {
             bibliotecarios.remove(bibliotecario);
         }
     }
-    public ArrayList<Bibliotecario> getBibliotecarios() {
+    public static ArrayList<Bibliotecario> getBibliotecarios() {
         return bibliotecarios;
     }
-    public void adicionarLeitor(Leitor leitor) {
+    public static void adicionarLeitor(Leitor leitor) {
         if(!leitores.contains(leitor) && leitor != null) {
             leitores.add(leitor);
         }
     }
-    public void removerLeitor(Leitor leitor) {
+    public static void removerLeitor(Leitor leitor) {
         if(leitores.contains(leitor)) {
             leitores.remove(leitor);
         }
     }
-    public ArrayList<Leitor> getLeitores(){
+    public static ArrayList<Leitor> getLeitores(){
         return leitores;
     }
-    public void adicionarLivro(Livro livro) {
+    public static void adicionarLivro(Livro livro) {
         if(!livros.contains(livro) && livro != null) {
             livros.add(livro);
         }
     }
-    public void removerLivro(Livro livro) {
+    public static void removerLivro(Livro livro) {
         if(livros.contains(livro)) {
             livros.remove(livro);
         }
     }
-    public ArrayList<Livro> getLivros(){
+    public static ArrayList<Livro> getLivros(){
         return livros;
+    }
+    public static void adicionarAutor(Autor autor) {
+        if(!autores.contains(autor) && autor != null) {
+            autores.add(autor);
+        }
+    }
+    public static void removerAutor(Autor autor) {
+        if(autores.contains(autor)) {
+            autores.remove(autor);
+        }
+    }
+    public static ArrayList<Autor> getAutores(){
+        return autores;
     }
 }

@@ -1,7 +1,5 @@
 package classes;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 import excecoes.FraseInvalidaException;
@@ -15,15 +13,15 @@ public abstract class Usuario {
     private String email;
     private String telefone;
 
-    public Usuario(String nome, String email, String telefone, String usuario, String senha, ArrayList<Bibliotecario> bibliotecarios, ArrayList<Leitor> leitores) throws FraseInvalidaException, RegistroJaExistenteException {
+    public Usuario(String nome, String email, String telefone, String usuario, String senha) throws FraseInvalidaException, RegistroJaExistenteException {
         setNome(nome);
-        setEmail(email, bibliotecarios, leitores);
-        setTelefone(telefone, bibliotecarios, leitores);
-        setUsuario(usuario, bibliotecarios, leitores);
+        setEmail(email);
+        setTelefone(telefone);
+        setUsuario(usuario);
         setSenha(senha);
     }
 
-    public void atualizarDados(ArrayList<Bibliotecario> bibliotecarios, ArrayList<Leitor> leitores) {
+    public void atualizarDados() {
         Scanner leitor = new Scanner(System.in);
         
         System.out.println("Atualizar dados do usuário ID: " + id);
@@ -33,10 +31,10 @@ public abstract class Usuario {
             setNome(leitor.nextLine());
             System.out.println("Novo email: ");
             leitor.nextLine();
-            setEmail(leitor.nextLine(), bibliotecarios, leitores);
+            setEmail(leitor.nextLine());
             System.out.println("Novo telefone: ");
             leitor.nextLine();
-            setTelefone(leitor.nextLine(), bibliotecarios, leitores);
+            setTelefone(leitor.nextLine());
         }catch(Exception e){
             System.out.println("Erro ao atualizar dados: " + e.getMessage());
             e.printStackTrace();
@@ -59,9 +57,9 @@ public abstract class Usuario {
         return nome;
     }
 
-    public void setUsuario(String usuario, ArrayList<Bibliotecario> bibliotecarios, ArrayList<Leitor> leitores) throws FraseInvalidaException, RegistroJaExistenteException {
+    public void setUsuario(String usuario) throws FraseInvalidaException, RegistroJaExistenteException {
         if(Validadores.validarUsuario(usuario)) {
-            if(Validadores.validarUsuarioUnico(usuario, bibliotecarios, leitores)){
+            if(Validadores.validarUsuarioUnico(usuario)){
                 this.usuario = usuario;
             }else{
                 throw new RegistroJaExistenteException("Usuário já cadastrado para outro usuário.");
@@ -92,9 +90,9 @@ public abstract class Usuario {
         return this.senha;
     }
 
-    public void setEmail(String email, ArrayList<Bibliotecario> bibliotecarios, ArrayList<Leitor> leitores) throws FraseInvalidaException, RegistroJaExistenteException {
+    public void setEmail(String email) throws FraseInvalidaException, RegistroJaExistenteException {
         if(Validadores.validarEmail(email)) {
-            if(Validadores.validarEmailUnico(email, bibliotecarios, leitores)){
+            if(Validadores.validarEmailUnico(email)){
                 this.email = email;
             }else{
                 throw new RegistroJaExistenteException("Email já cadastrado para outro usuário.");
@@ -108,9 +106,9 @@ public abstract class Usuario {
         return email;
     }
 
-    public void setTelefone(String telefone, ArrayList<Bibliotecario> bibliotecarios, ArrayList<Leitor> leitores) throws FraseInvalidaException, RegistroJaExistenteException {
+    public void setTelefone(String telefone) throws FraseInvalidaException, RegistroJaExistenteException {
         if(Validadores.validarTelefone(telefone)) {
-            if(Validadores.validarTelefoneUnico(telefone, bibliotecarios, leitores)){
+            if(Validadores.validarTelefoneUnico(telefone)){
                 this.telefone = telefone;
             }else{
                 throw new RegistroJaExistenteException("Telefone já cadastrado para outro usuário.");

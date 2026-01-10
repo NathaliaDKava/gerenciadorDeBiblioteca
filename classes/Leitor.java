@@ -12,6 +12,8 @@ public class Leitor extends Usuario {
     private static int contadorIds = 0;
     private Livro[] livrosEmprestados;
     private int maxLivrosEmprestados = 5;
+    private ArrayList<Emprestimo> emprestimosAtivos;
+    private double totalMultas;
 
     public Leitor(String nome, String email, String telefone, String usuario, String senha, ArrayList<Bibliotecario> bibliotecarios, ArrayList<Leitor> leitores) throws FraseInvalidaException, RegistroJaExistenteException {
         super(nome, email, telefone, usuario, senha, bibliotecarios, leitores);
