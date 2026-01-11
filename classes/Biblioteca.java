@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import excecoes.AutorNaoPodeSerRemovidoException;
+import excecoes.BibliotecarioNaoPodeSerRemovidoException;
 import excecoes.FraseInvalidaException;
 import excecoes.LeitorNaoPodeSerRemovidoException;
+import excecoes.LivroNaoPodeSerRemovidoException;
 import excecoes.QuantidadeLivrosDisponiveisInvalidaException;
 import excecoes.QuantidadeTotalLivrosInvalidaException;
 import excecoes.RegistroJaExistenteException;
@@ -17,6 +19,7 @@ public class Biblioteca {
     private static ArrayList<Leitor> leitores;
     private static ArrayList<Livro> livros;
     private static ArrayList<Autor> autores;
+    private static ArrayList<Emprestimo> emprestimos;
     
     static{
         bibliotecarios = new ArrayList<Bibliotecario>();
@@ -74,16 +77,21 @@ public class Biblioteca {
         }catch(FraseInvalidaException | RegistroJaExistenteException e){
             System.out.println(e.getMessage());
         }
-        scan.close();
     }
     public static void adicionarBibliotecario(Bibliotecario bibliotecario) {
         if(!bibliotecarios.contains(bibliotecario) && bibliotecario != null){
             bibliotecarios.add(bibliotecario);
         }
     }
-    public static void removerBibliotecario(Bibliotecario bibliotecario) {
+    public static void removerBibliotecario(int idBibliotecario) throws BibliotecarioNaoPodeSerRemovidoException {
+        Bibliotecario bibliotecario = buscarBibliotecarioPorId(idBibliotecario);
+
         if(bibliotecarios.contains(bibliotecario)) {
-            bibliotecarios.remove(bibliotecario);
+            if(bibliotecarios.size() > 1){
+                bibliotecarios.remove(bibliotecario);
+            }else{
+                throw new BibliotecarioNaoPodeSerRemovidoException("A biblioteca deve possuir ao menos um bibliotecário cadastrado.");
+            }
         }
     }
     public static Bibliotecario buscarBibliotecarioPorId(int id) throws NullPointerException {
@@ -102,7 +110,15 @@ public class Biblioteca {
             leitores.add(leitor);
         }
     }
-    public static void removerLeitor(Leitor leitor) throws LeitorNaoPodeSerRemovidoException {
+    public static void removerLeitor(int idLeitor) throws LeitorNaoPodeSerRemovidoException {
+        Leitor leitor = buscarLeitorPorId(idLeitor);
+
+        for(Emprestimo emprestimo : Biblioteca.getEmprestimos()){
+            if(emprestimo.getLeitor().equals(leitor)){
+                throw new LeitorNaoPodeSerRemovidoException("Não é possível remover um leitor com livros emprestados.");
+            }
+        }
+
         if(leitores.contains(leitor) && leitor.getLivrosEmprestados() != null && leitor.getTotalMultas() == 0.0) {
             leitores.remove(leitor);
         }else{
@@ -125,8 +141,17 @@ public class Biblioteca {
             livros.add(livro);
         }
     }
-    public static void removerLivro(Livro livro, int quantidade) throws QuantidadeLivrosDisponiveisInvalidaException{
+    public static void removerLivro(int idLivro, int quantidade) throws QuantidadeLivrosDisponiveisInvalidaException, LivroNaoPodeSerRemovidoException {
+        Livro livro = buscarLivroPorId(idLivro);
+
         if(livros.contains(livro)) {
+            for(Emprestimo emprestimo : Biblioteca.getEmprestimos()){
+                if(emprestimo.getLivro().equals(livro)){
+                    throw new LivroNaoPodeSerRemovidoException("Não é possível remover um livro emprestado.");
+                }
+
+            }
+            
             if(quantidade <= livro.getQuantidadeDisponivel() && quantidade > 0){
                 if(livro.getQuantidadeDisponivel() == quantidade && livro.getQuantidadeTotal() == quantidade){
                     for(Autor autor : Biblioteca.getAutores()){
@@ -163,7 +188,9 @@ public class Biblioteca {
             autores.add(autor);
         }
     }
-    public static void removerAutor(Autor autor) throws AutorNaoPodeSerRemovidoException {
+    public static void removerAutor(int idAutor) throws AutorNaoPodeSerRemovidoException {
+        Autor autor = buscarAutorPorId(idAutor);
+
         if(autores.contains(autor)) {
             for(Livro livro : Biblioteca.getLivros()){
                 if(livro.getAutor().equals(autor)){
@@ -183,5 +210,44 @@ public class Biblioteca {
     }
     public static ArrayList<Autor> getAutores(){
         return autores;
+    }
+    public static void adicionarEmprestimo(Emprestimo emprestimo) {
+        if(!emprestimos.contains(emprestimo) && emprestimo != null) {
+            emprestimos.add(emprestimo);
+        }
+    }
+    public static void removerEmprestimo(int idEmprestimo) {
+        Emprestimo emprestimo = buscarEmprestimoPorId(idEmprestimo);
+
+        if(emprestimos.contains(emprestimo)) {
+            emprestimos.remove(emprestimo);
+        }
+    }
+    public static Emprestimo buscarEmprestimoPorId(int id) throws NullPointerException {
+        for(Emprestimo emprestimo : Biblioteca.getEmprestimos()) {
+            if(emprestimo.getId() == id) {
+                return emprestimo;
+            }
+        }
+        throw new NullPointerException("Empréstimo não encontrado.");
+    }
+    public static Emprestimo buscarEmprestimoPorLivro(int idLivro) throws NullPointerException {
+        for(Emprestimo emprestimo : Biblioteca.getEmprestimos()) {
+            if(emprestimo.getLivro().getId() == idLivro) {
+                return emprestimo;
+            }
+        }
+        throw new NullPointerException("Empréstimo não encontrado.");
+    }
+    public static Emprestimo buscarEmprestimoPorLeitor(int idLeitor) throws NullPointerException {
+        for(Emprestimo emprestimo : Biblioteca.getEmprestimos()) {
+            if(emprestimo.getLeitor().getId() == idLeitor) {
+                return emprestimo;
+            }
+        }
+        throw new NullPointerException("Empréstimo não encontrado.");
+    }
+    public static ArrayList<Emprestimo> getEmprestimos(){
+        return emprestimos;
     }
 }

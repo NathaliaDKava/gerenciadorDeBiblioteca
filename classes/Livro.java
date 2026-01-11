@@ -42,6 +42,16 @@ public class Livro {
         quantidadeDisponivel = 0;
     }
 
+    public static void setValorMultaPorDia(double valorMultaPorDia) throws IllegalArgumentException {
+        if(valorMultaPorDia > 0){
+            Livro.valorMultaPorDia = valorMultaPorDia;
+        }else{
+            throw new IllegalArgumentException("Valor da multa por dia inválido. Deve ser maior que zero.");
+        }
+    }
+    public static double getValorMultaPorDia() {
+        return valorMultaPorDia;
+    }
     public int getId() {
         return id;
     }

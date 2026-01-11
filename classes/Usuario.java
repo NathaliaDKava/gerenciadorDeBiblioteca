@@ -38,6 +38,8 @@ public abstract class Usuario {
         }catch(Exception e){
             System.out.println("Erro ao atualizar dados: " + e.getMessage());
             e.printStackTrace();
+        }finally{
+            leitor.close();
         }
     }
 

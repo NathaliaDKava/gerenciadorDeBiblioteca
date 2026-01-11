@@ -3,6 +3,7 @@ package classes;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import excecoes.NumeroMaximoLivrosInvalidoException;
 import excecoes.AnoInvalidoException;
 import excecoes.AutorNaoPodeSerRemovidoException;
 import excecoes.FraseInvalidaException;
@@ -10,7 +11,7 @@ import excecoes.LeitorNaoPodeSerRemovidoException;
 import excecoes.LivroInvalidoException;
 import excecoes.RegistroJaExistenteException;
 import excecoes.QuantidadeLivrosDisponiveisInvalidaException;
-import excecoes.QuantidadeTotalLivrosInvalidaException;
+import excecoes.LivroNaoPodeSerRemovidoException;
 import interfaces.gerenciadorBiblioteca;
 
 public class Bibliotecario extends Usuario implements gerenciadorBiblioteca {
@@ -38,8 +39,6 @@ public class Bibliotecario extends Usuario implements gerenciadorBiblioteca {
         } catch (NullPointerException e) {
             System.out.println(e.getMessage());
             return;
-        } finally {
-            scan.close();
         }
         System.out.print("ISBN: ");
         scan.nextLine();
@@ -62,12 +61,37 @@ public class Bibliotecario extends Usuario implements gerenciadorBiblioteca {
             System.out.println(e.getMessage());
         }catch(AnoInvalidoException e){
             System.out.println(e.getMessage());
-        }finally{
-            scan.close();
+        }
+    }
+    public void definirMaximoLivrosEmprestados(){
+        Scanner scan = new Scanner(System.in);
+        
+        System.out.println("DEFINIÇÃO DE LIVROS EMPRESTADOS\n-------------------------------");
+        System.out.print("Quantidade máxima de livros emprestados: ");
+        try{
+            Leitor.setMaxLivrosEmprestados(scan.nextInt());
+        }catch(InputMismatchException | NumeroMaximoLivrosInvalidoException e){
+            System.out.println(e.getMessage());
+            return;
+        }
+    }
+    public void definirMultaPorDia() {
+        Scanner scan = new Scanner(System.in);
+
+        System.out.println("DEFINIÇÃO DE MULTA POR DIA\n-------------------------");
+        System.out.print("Valor da multa por dia: ");
+        try{
+            Livro.setValorMultaPorDia(scan.nextDouble());
+        }catch(IllegalArgumentException e){
+            System.out.println(e.getMessage());
+            return;
+        }catch(InputMismatchException e){
+            System.out.println("Valor inválido. Por favor, insira um número.");
+            System.out.println(e.getMessage());
+            return;
         }
     }
     public void removerLivro() {
-        Livro livro;
         Scanner scan = new Scanner(System.in);
         int quantidade, id;
 
@@ -78,17 +102,14 @@ public class Bibliotecario extends Usuario implements gerenciadorBiblioteca {
         quantidade = scan.nextInt();
 
         try{
-            livro = Biblioteca.buscarLivroPorId(id);
-            Biblioteca.removerLivro(livro, quantidade);
+            Biblioteca.removerLivro(id, quantidade);
         }catch(InputMismatchException e){
             System.out.println("ID inválido. Por favor, insira um número inteiro.");
             System.out.println(e.getMessage());
             return;
-        }catch(NullPointerException | QuantidadeLivrosDisponiveisInvalidaException e){
+        }catch(NullPointerException | QuantidadeLivrosDisponiveisInvalidaException | LivroNaoPodeSerRemovidoException e){
             System.out.println(e.getMessage());
             return;
-        }finally {
-            scan.close();
         }
     }
     public void registrarEmprestimo() {
@@ -119,8 +140,6 @@ public class Bibliotecario extends Usuario implements gerenciadorBiblioteca {
         }catch(FraseInvalidaException e){
             System.out.println(e.getMessage());
             return;
-        } finally {
-            scan.close();
         }
         
     }
@@ -145,12 +164,9 @@ public class Bibliotecario extends Usuario implements gerenciadorBiblioteca {
         }catch(NullPointerException e){
             System.out.println("Livro não encontrado.");
             System.out.println(e.getMessage());
-        }finally{
-            scan.close();
         }
     }
     public void removerAutor() {
-        Autor autor;
         Scanner scan = new Scanner(System.in);
         int id;
 
@@ -159,8 +175,7 @@ public class Bibliotecario extends Usuario implements gerenciadorBiblioteca {
         id = scan.nextInt();
 
         try{
-            autor = Biblioteca.buscarAutorPorId(id);
-            Biblioteca.removerAutor(autor);
+            Biblioteca.removerAutor(id);
         }catch(InputMismatchException e){
             System.out.println("ID inválido. Por favor, insira um número inteiro.");
             System.out.println(e.getMessage());
@@ -168,8 +183,6 @@ public class Bibliotecario extends Usuario implements gerenciadorBiblioteca {
         }catch(NullPointerException | AutorNaoPodeSerRemovidoException e){
             System.out.println(e.getMessage());
             return;
-        }finally {
-            scan.close();
         }
     }
     public void cadastrarLeitor() {
@@ -200,12 +213,9 @@ public class Bibliotecario extends Usuario implements gerenciadorBiblioteca {
         }catch(FraseInvalidaException | RegistroJaExistenteException e){
             System.out.println(e.getMessage());
             return;
-        } finally {
-            scan.close();
         }
     }
     public void removerLeitor() {
-        Leitor leitor;
         Scanner scan = new Scanner(System.in);
         int id;
 
@@ -214,8 +224,7 @@ public class Bibliotecario extends Usuario implements gerenciadorBiblioteca {
         id = scan.nextInt();
 
         try{
-            leitor = Biblioteca.buscarLeitorPorId(id);
-            Biblioteca.removerLeitor(leitor);
+            Biblioteca.removerLeitor(id);
         }catch(InputMismatchException e){
             System.out.println("ID inválido. Por favor, insira um número inteiro.");
             System.out.println(e.getMessage());
@@ -223,8 +232,6 @@ public class Bibliotecario extends Usuario implements gerenciadorBiblioteca {
         }catch(NullPointerException | LeitorNaoPodeSerRemovidoException e){
             System.out.println(e.getMessage());
             return;
-        }finally {
-            scan.close();
         }
     }
     @Override
