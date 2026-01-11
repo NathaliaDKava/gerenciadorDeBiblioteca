@@ -1,5 +1,6 @@
 package classes;
 
+
 public abstract class Validadores {
     
 
@@ -67,6 +68,7 @@ public abstract class Validadores {
         for(Livro livro : Biblioteca.getLivros()){
             if(isbn.equals(livro.getIsbn())){
                 isValid = false;
+                break;
             }
         }
 

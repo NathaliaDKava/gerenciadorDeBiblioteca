@@ -121,4 +121,6 @@ public abstract class Usuario {
     public String getTelefone() {
         return telefone;
     }
+
+    public abstract void exibirDados();
 }

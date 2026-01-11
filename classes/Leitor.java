@@ -15,10 +15,12 @@ public class Leitor extends Usuario {
     private ArrayList<Emprestimo> emprestimosAtivos;
     private double totalMultas;
 
-    public Leitor(String nome, String email, String telefone, String usuario, String senha, ArrayList<Bibliotecario> bibliotecarios, ArrayList<Leitor> leitores) throws FraseInvalidaException, RegistroJaExistenteException {
-        super(nome, email, telefone, usuario, senha, bibliotecarios, leitores);
+    public Leitor(String nome, String email, String telefone, String usuario, String senha) throws FraseInvalidaException, RegistroJaExistenteException {
+        super(nome, email, telefone, usuario, senha);
         this.id = ++contadorIds;
         this.livrosEmprestados = new Livro[maxLivrosEmprestados]; // Limite de 5 livros emprestados
+        this.emprestimosAtivos = new ArrayList<Emprestimo>();
+        this.totalMultas = 0.0;
     }
 
     public void emprestarLivro(Livro livro) throws LimiteLivrosEmprestadosAtingidoException {
@@ -85,5 +87,21 @@ public class Leitor extends Usuario {
     }
     public int getMaxLivrosEmprestados() {
         return maxLivrosEmprestados;
+    }
+    public void setTotalMultas(double totalMultas) {
+        this.totalMultas = totalMultas;
+    }
+    public double getTotalMultas() {
+        return totalMultas;
+    }
+    @Override
+    public void exibirDados() {
+        System.out.println("ID: " + this.id);
+        System.out.println("Nome: " + getNome());
+        System.out.println("Email: " + getEmail());
+        System.out.println("Telefone: " + getTelefone());
+        System.out.println("Usuário: " + getUsuario());
+        System.out.println("Total de Multas: R$ " + String.format("%.2f", this.totalMultas));
+        System.out.println("Livros Emprestados: " + this.getQuantidadeLivrosEmprestados() + "/" + this.maxLivrosEmprestados);
     }
 }

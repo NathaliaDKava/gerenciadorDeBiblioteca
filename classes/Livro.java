@@ -1,6 +1,5 @@
 package classes;
 
-import java.util.ArrayList;
 import excecoes.AnoInvalidoException;
 import excecoes.FraseInvalidaException;
 import excecoes.QuantidadeLivrosDisponiveisInvalidaException;

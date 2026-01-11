@@ -85,14 +85,6 @@ public class Autor {
             System.out.println("- " + livro.getTitulo());
         }
     }
-    public static Autor buscarAutorPorNome(String nome) {
-        for(Autor autor : Biblioteca.getAutores()) {
-            if(autor.getNome().equalsIgnoreCase(nome)) {
-                return autor;
-            }
-        }
-        return null;
-    }
     public void setLivros(ArrayList<Livro> livros) throws LivroInvalidoException {
         if(livros != null){
             this.livros = livros;

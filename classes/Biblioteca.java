@@ -1,9 +1,13 @@
 package classes;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import excecoes.AutorNaoPodeSerRemovidoException;
 import excecoes.FraseInvalidaException;
+import excecoes.LeitorNaoPodeSerRemovidoException;
+import excecoes.QuantidadeLivrosDisponiveisInvalidaException;
+import excecoes.QuantidadeTotalLivrosInvalidaException;
 import excecoes.RegistroJaExistenteException;
 
 public class Biblioteca {
@@ -82,6 +86,14 @@ public class Biblioteca {
             bibliotecarios.remove(bibliotecario);
         }
     }
+    public static Bibliotecario buscarBibliotecarioPorId(int id) throws NullPointerException {
+        for(Bibliotecario bibliotecario : Biblioteca.getBibliotecarios()) {
+            if(bibliotecario.getId() == id) {
+                return bibliotecario;
+            }
+        }
+        throw new NullPointerException("Bibliotecário não encontrado.");
+    }
     public static ArrayList<Bibliotecario> getBibliotecarios() {
         return bibliotecarios;
     }
@@ -90,10 +102,20 @@ public class Biblioteca {
             leitores.add(leitor);
         }
     }
-    public static void removerLeitor(Leitor leitor) {
-        if(leitores.contains(leitor)) {
+    public static void removerLeitor(Leitor leitor) throws LeitorNaoPodeSerRemovidoException {
+        if(leitores.contains(leitor) && leitor.getLivrosEmprestados() != null && leitor.getTotalMultas() == 0.0) {
             leitores.remove(leitor);
+        }else{
+            throw new LeitorNaoPodeSerRemovidoException("O leitor em questão não está cadastrado, ou ainda possui livros emprestados, ou possui multas com pagamento pendente.");
         }
+    }
+    public static Leitor buscarLeitorPorId(int id) throws NullPointerException {
+        for(Leitor leitor : Biblioteca.getLeitores()) {
+            if(leitor.getId() == id) {
+                return leitor;
+            }
+        }
+        throw new NullPointerException("Leitor não encontrado.");
     }
     public static ArrayList<Leitor> getLeitores(){
         return leitores;
@@ -103,10 +125,35 @@ public class Biblioteca {
             livros.add(livro);
         }
     }
-    public static void removerLivro(Livro livro) {
+    public static void removerLivro(Livro livro, int quantidade) throws QuantidadeLivrosDisponiveisInvalidaException{
         if(livros.contains(livro)) {
-            livros.remove(livro);
+            if(quantidade <= livro.getQuantidadeDisponivel() && quantidade > 0){
+                if(livro.getQuantidadeDisponivel() == quantidade && livro.getQuantidadeTotal() == quantidade){
+                    for(Autor autor : Biblioteca.getAutores()){
+                        if(autor.getLivros().contains(livro)){
+                            autor.getLivros().remove(livro);
+                        }
+                    }
+                    livros.remove(livro);
+                    return;
+                }
+                try{
+                    livro.setQuantidadeDisponivel(livro.getQuantidadeDisponivel() - quantidade);
+                    livro.setQuantidadeTotal(livro.getQuantidadeTotal() - quantidade);
+                }catch(QuantidadeLivrosDisponiveisInvalidaException | QuantidadeTotalLivrosInvalidaException e){
+                    System.out.println(e.getMessage());                }
+            }else{
+                throw new QuantidadeLivrosDisponiveisInvalidaException("Quantidade disponível de livros inválida. Deve ser maior ou igual a zero e menor ou igual à quantidade total de livros.");
+            }
         }
+    }
+    public static Livro buscarLivroPorId(int id) throws NullPointerException {
+        for(Livro livro : Biblioteca.getLivros()) {
+            if(livro.getId() == id) {
+                return livro;
+            }
+        }
+        throw new NullPointerException("Livro não encontrado.");
     }
     public static ArrayList<Livro> getLivros(){
         return livros;
@@ -116,10 +163,23 @@ public class Biblioteca {
             autores.add(autor);
         }
     }
-    public static void removerAutor(Autor autor) {
+    public static void removerAutor(Autor autor) throws AutorNaoPodeSerRemovidoException {
         if(autores.contains(autor)) {
+            for(Livro livro : Biblioteca.getLivros()){
+                if(livro.getAutor().equals(autor)){
+                    throw new AutorNaoPodeSerRemovidoException("Há livros cadastrados com este autor. Considere remover os livros desse autor primeiro.");
+                }
+            }
             autores.remove(autor);
         }
+    }
+    public static Autor buscarAutorPorId(int id) throws NullPointerException {
+        for(Autor autor : Biblioteca.getAutores()) {
+            if(autor.getId() == id) {
+                return autor;
+            }
+        }
+        throw new NullPointerException("Autor não encontrado.");
     }
     public static ArrayList<Autor> getAutores(){
         return autores;
